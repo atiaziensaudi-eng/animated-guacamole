@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#c00000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>FuelPro</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf5f5;--sf:#fff8f8;--card:#ffffff;--card2:#fff4f4;
+  --bd:#f5c6c6;--bd2:#f0a0a0;
+  --ac:#c00000;--ac2:#e00000;--acl:#fff0f0;
+  --tx:#1a0000;--tx2:#3d0000;--mu:#8a4040;--mu2:#b07070;
+  --green:#16a34a;--greenl:#f0fdf4;--greenb:#86efac;
+  --shadow:0 2px 16px rgba(192,0,0,0.07);
+  --shadow-lg:0 8px 32px rgba(192,0,0,0.13);
+  --grad:linear-gradient(135deg,#c00000,#a00000);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+
+/* ── LOGIN SCREEN ── */
+#loginScr{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:22px;
+  background:linear-gradient(160deg,#c00000 0%,#7f0000 40%,#450000 100%);
+}
+#loginScr::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,100,100,0.2) 0%,transparent 60%);
+  pointer-events:none
+}
+.login-logo{text-align:center;margin-bottom:26px;position:relative;z-index:1}
+.login-logo .icon{
+  width:76px;height:76px;border-radius:22px;margin:0 auto 14px;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:36px;box-shadow:0 12px 40px rgba(0,0,0,0.3)
+}
+.login-logo h1{font-size:28px;font-weight:900;color:#fff;letter-spacing:-0.5px}
+.login-logo p{font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px}
+.login-card{
+  background:#fff;border-radius:22px;padding:22px 20px;
+  width:100%;max-width:400px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  position:relative;z-index:1;
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:linear-gradient(135deg,#c00000 0%,#a80000 100%);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 3px 16px rgba(192,0,0,0.25)
+}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{font-size:20px}
+.tb-title{font-size:16px;font-weight:900;color:#fff}
+.tb-role{font-size:11px;color:rgba(255,255,255,0.75);margin-top:1px}
+.tb-logout{
+  background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);
+  border-radius:8px;padding:6px 14px;color:#fff;font-size:12px;font-weight:700;
+  cursor:pointer;font-family:'Tajawal',sans-serif;transition:background .2s
+}
+.tb-logout:active{background:rgba(255,255,255,0.3)}
+
+/* ── NAV ── */
+.bnav{
+  background:#fff;border-top:1.5px solid var(--bd);display:flex;
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  padding-bottom:env(safe-area-inset-bottom,0);
+  box-shadow:0 -2px 16px rgba(192,0,0,0.07);
+  overflow-x:auto;scrollbar-width:none
+}
+.bnav::-webkit-scrollbar{display:none}
+.nb{
+  flex:1;min-width:56px;padding:8px 3px 6px;text-align:center;
+  background:none;border:none;border-top:2.5px solid transparent;
+  color:var(--mu2);cursor:pointer;font-family:'Tajawal',sans-serif;
+  transition:all .2s;margin-top:-2px;white-space:nowrap
+}
+.nb .ni{font-size:18px;display:block;margin-bottom:2px}
+.nb .nl{font-size:10px;font-weight:700}
+.nb.on{color:var(--ac);border-top-color:var(--ac)}
+
+/* ── PAGES ── */
+.page-content{flex:1;overflow-y:auto;padding:14px 13px 84px}
+.page{display:none;animation:fup .22s ease}
+.page.on{display:block}
+@keyframes fup{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARDS ── */
+.card{
+  background:#fff;border:1px solid var(--bd);border-radius:16px;
+  padding:15px;margin-bottom:12px;box-shadow:var(--shadow)
+}
+.card2{
+  background:var(--card2);border:1px solid var(--bd);
+  border-radius:12px;padding:12px;margin-bottom:9px
+}
+.ct{
+  font-size:12px;font-weight:800;color:var(--ac);letter-spacing:.5px;
+  text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:7px
+}
+.ct::after{content:'';flex:1;height:1.5px;background:linear-gradient(to left,transparent,var(--bd))}
+
+/* ── SECTION TITLE ── */
+.stitle{
+  font-size:11px;font-weight:800;color:var(--ac);letter-spacing:1.5px;
+  text-transform:uppercase;margin:16px 0 10px;
+  display:flex;align-items:center;gap:7px
+}
+.stitle::after{content:'';flex:1;height:1.5px;background:var(--bd)}
+
+/* ── FORMS ── */
+.fg{margin-bottom:11px}
+.fg label{display:block;font-size:12px;color:var(--mu);margin-bottom:5px;font-weight:700}
+.fg input,.fg select,.fg textarea{
+  width:100%;background:#fff;border:1.5px solid var(--bd);border-radius:9px;
+  padding:10px 13px;color:var(--tx);font-family:'Tajawal',sans-serif;
+  font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s
+}
+.fg input:focus,.fg select:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(192,0,0,0.07)}
+.sw{position:relative}.sw::after{content:'▾';position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--mu);pointer-events:none;font-size:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+/* ── BUTTONS ── */
+.btn{
+  width:100%;padding:13px;border-radius:11px;border:none;
+  font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:7px
+}
+.btn:active{transform:scale(.97)}
+.btn-p{background:linear-gradient(135deg,#c00000,#a00000);color:#fff;box-shadow:0 4px 14px rgba(192,0,0,0.28)}
+.btn-out{background:#fff;color:var(--ac);border:2px solid var(--ac)}
+.btn-ghost{background:var(--sf);color:var(--tx2);border:1.5px solid var(--bd)}
+.btn-danger{background:#fff5f5;color:#dc2626;border:1.5px solid #fca5a5}
+.btn-sm{padding:8px 13px;font-size:13px;width:auto;border-radius:8px}
+
+/* ── STAT BOXES ── */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.sb{background:#fff;border:1.5px solid var(--bd);border-radius:13px;padding:13px;box-shadow:var(--shadow)}
+.sb.full{grid-column:span 2}
+.sb .sl{font-size:11px;color:var(--mu);margin-bottom:4px;font-weight:700}
+.sb .sv{font-size:22px;font-weight:900;line-height:1;color:var(--ac)}
+.sb .su{font-size:10px;color:var(--mu2);margin-top:3px}
+.sb.dark{background:var(--ac);border-color:var(--ac)}
+.sb.dark .sl{color:rgba(255,255,255,0.75)}
+.sb.dark .sv{color:#fff}
+.sb.dark .su{color:rgba(255,255,255,0.6)}
+
+/* ── LOG ITEMS ── */
+.log-item{
+  background:#fff;border:1.5px solid var(--bd);border-radius:13px;
+  padding:13px;margin-bottom:9px;box-shadow:var(--shadow);
+  display:flex;justify-content:space-between;align-items:center
+}
+.log-left .log-label{font-size:14px;font-weight:800;color:var(--tx)}
+.log-left .log-time{font-size:11px;color:var(--mu2);margin-top:2px}
+.log-val{font-size:20px;font-weight:900;color:var(--green)}
+
+/* ── ALERT BOXES ── */
+.abox{border-radius:11px;padding:10px 13px;margin-bottom:10px;display:flex;align-items:flex-start;gap:9px;font-size:13px;font-weight:600}
+.abox.warn{background:#fff5f5;border:1.5px solid var(--bd2);color:#991b1b}
+.abox.info{background:#eff6ff;border:1.5px solid #bfdbfe;color:#1e40af}
+.abox.ok{background:var(--greenl);border:1.5px solid var(--greenb);color:#166534}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:88px;left:50%;
+  transform:translateX(-50%) translateY(30px);
+  background:var(--ac);color:#fff;padding:11px 22px;
+  border-radius:11px;font-weight:700;font-size:13px;
+  z-index:900;transition:all .3s;white-space:nowrap;
+  opacity:0;pointer-events:none;box-shadow:var(--shadow-lg)
+}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok{background:var(--green)}
+.toast.err{background:#dc2626}
+
+/* ── LOGIN ERR ── */
+.login-err{margin-top:10px;display:none}
+
+/* ── DIVIDER ── */
+.divider{height:1.5px;background:var(--bd);margin:12px 0}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:30px 16px;color:var(--mu2)}
+.empty-state .ei{font-size:36px;margin-bottom:10px}
+.empty-state p{font-size:13px;font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginScr">
+  <div class="login-logo">
+    <div class="icon">⛽</div>
+    <h1>FuelPro</h1>
+    <p>نظام إدارة محطات الوقود</p>
+  </div>
+  <div class="login-card">
+    <div class="fg">
+      <label>اسم المستخدم</label>
+      <input id="l-user" placeholder="أدخل اسم المستخدم" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="fg">
+      <label>كلمة المرور</label>
+      <input id="l-pass" type="password" placeholder="أدخل كلمة المرور" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn btn-p" onclick="doLogin()">🔑 دخول</button>
+    <div class="abox warn login-err" id="loginErr">❌ اسم المستخدم أو كلمة المرور غير صحيحة</div>
+  </div>
+</div>
+
+<!-- ══ APP SHELL ══ -->
+<div id="appShell" style="display:none;flex-direction:column;min-height:100vh">
+
+  <div class="topbar">
+    <div class="tb-left">
+      <span class="tb-logo">⛽</span>
+      <div>
+        <div class="tb-title">FuelPro</div>
+        <div class="tb-role" id="tbRole">—</div>
+      </div>
+    </div>
+    <button class="tb-logout" onclick="doLogout()">خروج</button>
+  </div>
+
+  <div class="page-content">
+
+    <!-- DASHBOARD -->
+    <div class="page on" id="page-dash">
+      <div class="stitle">📊 لوحة التحكم</div>
+      <div class="sg">
+        <div class="sb dark full">
+          <div class="sl">إجمالي القراءات المسجلة</div>
+          <div class="sv" id="dash-total">0</div>
+          <div class="su">لتر مجمّع</div>
+        </div>
+        <div class="sb">
+          <div class="sl">عدد السجلات</div>
+          <div class="sv" id="dash-count">0</div>
+          <div class="su">إدخال</div>
+        </div>
+        <div class="sb">
+          <div class="sl">آخر قراءة</div>
+          <div class="sv" id="dash-last">—</div>
+          <div class="su">لتر</div>
+        </div>
+      </div>
+      <div class="abox info" id="dash-hint">📝 ابدأ بإدخال قراءات المضخات من تبويب "إدخال"</div>
+    </div>
+
+    <!-- ENTRY -->
+    <div class="page" id="page-entry">
+      <div class="stitle">📝 إدخال قراءة مضخة</div>
+      <div class="card">
+        <div class="ct">بيانات القراءة</div>
+        <div class="fg">
+          <label>اسم المضخة / رقمها</label>
+          <input id="e-pump" placeholder="مثال: مضخة 1 - بنزين 91">
+        </div>
+        <div class="fg">
+          <label>القراءة (لتر)</label>
+          <input id="e-reading" type="number" placeholder="0.000" inputmode="decimal" step="0.001" oninput="liveCalc()">
+        </div>
+        <div class="fg">
+          <label>القراءة السابقة (لتر) — اختياري</label>
+          <input id="e-prev" type="number" placeholder="0.000" inputmode="decimal" step="0.001" oninput="liveCalc()">
+        </div>
+        <div id="liveConsBox" style="display:none" class="abox ok">
+          ⚡ الاستهلاك: <strong id="liveCons">0</strong> لتر
+        </div>
+        <div class="fg">
+          <label>ملاحظة — اختياري</label>
+          <input id="e-note" placeholder="وردية صباح / مساء ...">
+        </div>
+        <button class="btn btn-p" onclick="addEntry()">💾 حفظ القراءة</button>
+      </div>
+    </div>
+
+    <!-- RECORDS -->
+    <div class="page" id="page-records">
+      <div class="stitle">📋 سجل القراءات</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="btn btn-danger btn-sm" onclick="clearAll()" style="width:auto;flex:1">🗑️ مسح الكل</button>
+        <button class="btn btn-ghost btn-sm" onclick="showPage('entry')" style="width:auto;flex:1">➕ إضافة</button>
+      </div>
+      <div id="recList"></div>
+    </div>
+
+  </div>
+
+  <nav class="bnav" id="bnav">
+    <button class="nb on" onclick="showPage('dash')" id="nb-dash">
+      <span class="ni">📊</span><span class="nl">لوحة</span>
+    </button>
+    <button class="nb" onclick="showPage('entry')" id="nb-entry">
+      <span class="ni">📝</span><span class="nl">إدخال</span>
+    </button>
+    <button class="nb" onclick="showPage('records')" id="nb-records">
+      <span class="ni">📋</span><span class="nl">السجل</span>
+    </button>
+  </nav>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ STATE ══
+let records = [];
+let currentUser = null;
+
+// ══ SIMPLE AUTH ══
+// يمكن تعديل بيانات الدخول هنا
+const USERS = [
+  { username: 'admin', password: '1234', role: 'مدير المحطة' },
+  { username: 'موظف', password: '0000', role: 'موظف' }
+];
+
+// ══ STORAGE ══
+const DB = {
+  g: k => { try { return JSON.parse(localStorage.getItem('fuelpro_' + k)); } catch { return null; } },
+  s: (k, v) => localStorage.setItem('fuelpro_' + k, JSON.stringify(v)),
+};
+
+// ══ BOOT ══
+function boot() {
+  records = DB.g('records') || [];
+  const saved = DB.g('session');
+  if (saved) {
+    currentUser = saved;
+    showApp();
+  } else {
+    document.getElementById('loginScr').style.display = 'flex';
+    document.getElementById('appShell').style.display = 'none';
+  }
+}
+
+// ══ LOGIN ══
+function doLogin() {
+  const u = document.getElementById('l-user').value.trim();
+  const p = document.getElementById('l-pass').value;
+  const found = USERS.find(x => x.username === u && x.password === p);
+  const errEl = document.getElementById('loginErr');
+  if (!found) {
+    errEl.style.display = 'flex';
+    document.getElementById('l-pass').value = '';
+    return;
+  }
+  errEl.style.display = 'none';
+  currentUser = found;
+  DB.s('session', found);
+  showApp();
+}
+
+function doLogout() {
+  if (!confirm('هل تريد تسجيل الخروج؟')) return;
+  currentUser = null;
+  DB.s('session', null);
+  document.getElementById('l-user').value = '';
+  document.getElementById('l-pass').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('loginScr').style.display = 'flex';
+}
+
+function showApp() {
+  document.getElementById('loginScr').style.display = 'none';
+  const shell = document.getElementById('appShell');
+  shell.style.display = 'flex';
+  shell.style.flexDirection = 'column';
+  document.getElementById('tbRole').textContent = currentUser.role + ' · ' + currentUser.username;
+  renderDash();
+  renderRecords();
+}
+
+// ══ NAV ══
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+  const pg = document.getElementById('page-' + id);
+  const nb = document.getElementById('nb-' + id);
+  if (pg) pg.classList.add('on');
+  if (nb) nb.classList.add('on');
+  if (id === 'dash') renderDash();
+  if (id === 'records') renderRecords();
+}
+
+// ══ LIVE CALC ══
+function liveCalc() {
+  const cur = parseFloat(document.getElementById('e-reading').value) || 0;
+  const prev = parseFloat(document.getElementById('e-prev').value) || 0;
+  const box = document.getElementById('liveConsBox');
+  if (cur > 0 && prev > 0) {
+    const cons = Math.max(0, cur - prev);
+    document.getElementById('liveCons').textContent = cons.toLocaleString('ar-SA', { maximumFractionDigits: 3 });
+    box.style.display = 'flex';
+    // تحذير إذا الاستهلاك سالب (القراءة أقل من السابقة)
+    box.className = 'abox ' + (cur >= prev ? 'ok' : 'warn');
+    box.innerHTML = cur >= prev
+      ? `⚡ الاستهلاك: <strong id="liveCons">${cons.toLocaleString('ar-SA', { maximumFractionDigits: 3 })}</strong> لتر`
+      : `⚠️ القراءة الحالية أقل من السابقة! تحقق من الأرقام. فرق: <strong>${Math.abs(cons).toLocaleString('ar-SA', { maximumFractionDigits: 3 })}</strong> لتر`;
+  } else {
+    box.style.display = 'none';
+  }
+}
+
+// ══ ADD ENTRY ══
+function addEntry() {
+  const pump = document.getElementById('e-pump').value.trim();
+  const reading = parseFloat(document.getElementById('e-reading').value);
+  const prev = parseFloat(document.getElementById('e-prev').value) || 0;
+  const note = document.getElementById('e-note').value.trim();
+
+  // ── BUG FIXES ──
+  // 1. التحقق من صحة المدخلات
+  if (!pump) { toast('⚠️ أدخل اسم المضخة', 'err'); return; }
+  if (!reading && reading !== 0) { toast('⚠️ أدخل قراءة صحيحة', 'err'); return; }
+  if (reading < 0) { toast('⚠️ القراءة لا يمكن أن تكون سالبة', 'err'); return; }
+  // 2. حساب الاستهلاك بشكل صحيح (ليس تراكمياً)
+  const cons = prev > 0 ? Math.max(0, reading - prev) : reading;
+
+  const rec = {
+    id: 'r' + Date.now(),
+    pump,
+    reading,
+    prev: prev || null,
+    cons,
+    note,
+    savedAt: new Date().toLocaleString('ar-SA', { hour12: true }),
+    date: new Date().toLocaleDateString('ar-SA'),
+    user: currentUser.username,
+  };
+
+  records.unshift(rec);
+  DB.s('records', records);
+
+  // إعادة تعيين الحقول
+  document.getElementById('e-reading').value = '';
+  document.getElementById('e-prev').value = '';
+  document.getElementById('e-note').value = '';
+  document.getElementById('liveConsBox').style.display = 'none';
+
+  renderDash();
+  toast('✅ تم حفظ القراءة بنجاح', 'ok');
+}
+
+// ══ RENDER DASHBOARD ══
+function renderDash() {
+  // BUG FIX: الإجمالي الصحيح يحسب استهلاك كل مضخة وليس جمع القراءات الخام
+  const total = records.reduce((s, r) => s + (r.cons || 0), 0);
+  const last = records.length ? records[0].cons : null;
+
+  document.getElementById('dash-total').textContent =
+    total.toLocaleString('ar-SA', { maximumFractionDigits: 2 });
+  document.getElementById('dash-count').textContent = records.length;
+  document.getElementById('dash-last').textContent =
+    last !== null ? last.toLocaleString('ar-SA', { maximumFractionDigits: 3 }) : '—';
+
+  const hint = document.getElementById('dash-hint');
+  if (records.length > 0) {
+    hint.className = 'abox ok';
+    hint.innerHTML = `✅ آخر إدخال: <strong>${records[0].pump}</strong> — ${records[0].date}`;
+  } else {
+    hint.className = 'abox info';
+    hint.innerHTML = '📝 ابدأ بإدخال قراءات المضخات من تبويب "إدخال"';
+  }
+}
+
+// ══ RENDER RECORDS ══
+function renderRecords() {
+  const el = document.getElementById('recList');
+  if (!records.length) {
+    el.innerHTML = `<div class="empty-state">
+      <div class="ei">📋</div>
+      <p>لا توجد قراءات مسجلة بعد</p>
+    </div>`;
+    return;
+  }
+  el.innerHTML = records.map(r => `
+    <div class="log-item">
+      <div class="log-left">
+        <div class="log-label">${esc(r.pump)}</div>
+        <div class="log-time">${r.date} · ${r.savedAt}${r.note ? ' · ' + esc(r.note) : ''}</div>
+        ${r.prev ? `<div style="font-size:11px;color:var(--mu2);margin-top:2px">قراءة سابقة: ${r.prev.toLocaleString('ar-SA', { maximumFractionDigits: 3 })} لتر</div>` : ''}
+      </div>
+      <div style="text-align:left">
+        <div class="log-val">${(r.cons || 0).toLocaleString('ar-SA', { maximumFractionDigits: 3 })}</div>
+        <div style="font-size:9px;color:var(--mu2);margin-top:2px">لتر</div>
+        <button onclick="delRecord('${r.id}')" style="margin-top:6px;background:#fff5f5;border:1px solid #fecaca;border-radius:7px;padding:3px 9px;font-size:11px;color:#dc2626;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700">حذف</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══ DELETE RECORD ══
+function delRecord(id) {
+  if (!confirm('حذف هذا السجل؟')) return;
+  records = records.filter(r => r.id !== id);
+  DB.s('records', records);
+  renderRecords();
+  renderDash();
+  toast('تم الحذف', 'ok');
+}
+
+// ══ CLEAR ALL ══
+function clearAll() {
+  if (!confirm('⚠️ سيتم حذف جميع السجلات نهائياً. هل أنت متأكد؟')) return;
+  records = [];
+  DB.s('records', []);
+  renderRecords();
+  renderDash();
+  toast('تم مسح جميع السجلات', 'ok');
+}
+
+// ══ TOAST ══
+function toast(msg, type = 'ok', dur = 2600) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast ' + (type === 'err' ? 'err' : 'ok');
+  t.classList.add('on');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.classList.remove('on'), dur);
+}
+
+// ══ HELPERS ══
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+boot();
+</script>
+</body>
+</html>
